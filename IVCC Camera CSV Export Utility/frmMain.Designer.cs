@@ -52,13 +52,13 @@ namespace IVCC_Camera_CSV_Export_Utility
             // 
             // btnGenerate
             // 
-            this.btnGenerate.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnGenerate.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnGenerate.Location = new System.Drawing.Point(17, 23);
             this.btnGenerate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnGenerate.Name = "btnGenerate";
             this.btnGenerate.Size = new System.Drawing.Size(218, 41);
             this.btnGenerate.TabIndex = 0;
-            this.btnGenerate.Text = "카메라 리스트 생성";
+            this.btnGenerate.Text = "Generate Camera List";
             this.btnGenerate.UseVisualStyleBackColor = true;
             this.btnGenerate.Click += new System.EventHandler(this.btnGenerate_Click);
             // 
@@ -180,13 +180,13 @@ namespace IVCC_Camera_CSV_Export_Utility
             // 
             this.btnExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExport.BackColor = System.Drawing.Color.DarkGreen;
-            this.btnExport.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExport.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExport.ForeColor = System.Drawing.Color.White;
             this.btnExport.Location = new System.Drawing.Point(946, 687);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(214, 53);
             this.btnExport.TabIndex = 3;
-            this.btnExport.Text = "CSV파일로 저장...";
+            this.btnExport.Text = "Export to CSV...";
             this.btnExport.UseVisualStyleBackColor = false;
             this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
             // 
@@ -195,14 +195,14 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.BackColor = System.Drawing.Color.OrangeRed;
             this.btnCancel.Enabled = false;
-            this.btnCancel.Font = new System.Drawing.Font("Malgun Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnCancel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancel.ForeColor = System.Drawing.Color.White;
             this.btnCancel.Location = new System.Drawing.Point(12, 688);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(180, 38);
             this.btnCancel.TabIndex = 4;
-            this.btnCancel.Text = "작업 취소";
+            this.btnCancel.Text = "Cancel Task";
             this.btnCancel.UseVisualStyleBackColor = false;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
@@ -210,26 +210,26 @@ namespace IVCC_Camera_CSV_Export_Utility
             // 
             this.lblGenerateStatus.BackColor = System.Drawing.Color.Black;
             this.lblGenerateStatus.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblGenerateStatus.Font = new System.Drawing.Font("Malgun Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblGenerateStatus.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblGenerateStatus.ForeColor = System.Drawing.Color.SpringGreen;
             this.lblGenerateStatus.Location = new System.Drawing.Point(241, 23);
             this.lblGenerateStatus.Name = "lblGenerateStatus";
             this.lblGenerateStatus.Size = new System.Drawing.Size(300, 41);
             this.lblGenerateStatus.TabIndex = 5;
-            this.lblGenerateStatus.Text = "준비되었습니다";
+            this.lblGenerateStatus.Text = "Ready to Start";
             this.lblGenerateStatus.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnExit
             // 
             this.btnExit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnExit.BackColor = System.Drawing.SystemColors.Control;
-            this.btnExit.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnExit.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExit.ForeColor = System.Drawing.Color.Black;
             this.btnExit.Location = new System.Drawing.Point(1166, 687);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(122, 53);
             this.btnExit.TabIndex = 6;
-            this.btnExit.Text = "닫기";
+            this.btnExit.Text = "Exit";
             this.btnExit.UseVisualStyleBackColor = false;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 

@@ -72,7 +72,7 @@ namespace IVCC_Camera_CSV_Export_Utility
 
                 Automation ccAutomation = new Automation();
                 Cameras ivCams = ccAutomation.Cameras;
-                DialogResult proceed = MessageBox.Show("총 " + ivCams.Count.ToString() + " 카메라가 발견되었습니다. 목록을 생성할까요?", "카메라 목록 생성", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+                DialogResult proceed = MessageBox.Show("Total " + ivCams.Count.ToString() + " cameras found. Proceed to create list?", "Generate Camera List", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
 
                 if (proceed == DialogResult.OK)
                 {
@@ -84,14 +84,14 @@ namespace IVCC_Camera_CSV_Export_Utility
                 }
                 else
                 {
-                    lblGenerateStatus.Text = "목록 생성 취소";
+                    lblGenerateStatus.Text = "Operation Cancelled.";
                     lblGenerateStatus.ForeColor = Color.Gold;
                 }
                 
             }
             catch (Exception ex)
             {
-                MessageBox.Show("IV ControlCenter가 실행중이 아닙니다. ControlCenter에 로그인 하신 후 다시 시도해주세요.\n\n오류 내용: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                MessageBox.Show("IV ControlCenter is not running. Please run ControlCenter and try again.\n\nException: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
         }
 
@@ -107,7 +107,7 @@ namespace IVCC_Camera_CSV_Export_Utility
         {
             progressBar.Value = e.ProgressPercentage;
             lblGenerateStatus.ForeColor = Color.SpringGreen;
-            lblGenerateStatus.Text = progress.ToString() + "/" + totalCamCount.ToString() + "대 카메라 생성 완료";            
+            lblGenerateStatus.Text = progress.ToString() + "/" + totalCamCount.ToString() + "cameras generated";            
         }
 
         private void bgwRequestHandler_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -138,11 +138,11 @@ namespace IVCC_Camera_CSV_Export_Utility
                 try
                 {
                     csvwriter.WriteFile(saveFileDialog.FileName, camListObj);
-                    MessageBox.Show("CSV 파일을 " + saveFileDialog.FileName + "에 저장했습니다.", "CSV 내보내기 성공", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show("CSV File saved at " + saveFileDialog.FileName + ".", "CSV Export Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch
                 {
-                    MessageBox.Show("CSV 파일을 " + saveFileDialog.FileName + "에 저장하려는 도중 실패했습니다.\n파일 위치가 올바르거나 파일이 열려있는지 확인 해 주십시오.", "CSV 내보내기 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Failed to save CSV file at " + saveFileDialog.FileName + ".\nPlease verify whether folder is accessible and file is not in use", "CSV Export FAIL", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
             }
