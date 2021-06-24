@@ -37,7 +37,38 @@ namespace IVCC_Camera_CSV_Export_Utility
                     return;
                 }
 
+                List<ivRecSchedule> _ivrList = new List<ivRecSchedule>();
+                RecordingJobs r = c.RecordingJobs;
                 Device d = c.Device;
+                
+                if (r.Count == 0)
+                {
+                    ivRecSchedule _ivr = new ivRecSchedule
+                    {
+                        NvrName = "[Not Recording]",
+                        Status = "[Not Recording]",
+                        Mode = "[Not Recording]"
+                    };
+                    _ivrList.Add(_ivr);
+                }
+                else
+                {
+                    foreach (RecordingJob j in r)
+                    {
+                        if (j.Mode == "Primary")
+                        {
+                            ivRecSchedule _ivr = new ivRecSchedule
+                            {
+                                NvrName = j.NvrName,
+                                Status = j.Status,
+                                Mode = j.Mode
+                            };
+                            _ivrList.Add(_ivr);
+                        }
+                    }
+                }
+                
+
                 ivCamera _ivc = new ivCamera
                 {
                     Access_URL = c.AccessUrl,
@@ -48,8 +79,10 @@ namespace IVCC_Camera_CSV_Export_Utility
                     Number = (int)c.LogicalNumber,
                     Primary_NVR_IP = c.PrimaryNvr.Device.IpAddress,
                     Primary_NVR = c.PrimaryNvr.Device.Name,
-                    Home_Site = d.Site.Name
+                    Home_Site = d.Site.Name,
+                    Recording_NVR = _ivrList[0].NvrName,                    
                 };
+              
                 camListObj.Add(_ivc);
                 progress++;
 
@@ -107,7 +140,7 @@ namespace IVCC_Camera_CSV_Export_Utility
         {
             progressBar.Value = e.ProgressPercentage;
             lblGenerateStatus.ForeColor = Color.SpringGreen;
-            lblGenerateStatus.Text = progress.ToString() + "/" + totalCamCount.ToString() + "cameras generated";            
+            lblGenerateStatus.Text = progress.ToString() + "/" + totalCamCount.ToString() + " cameras generated";            
         }
 
         private void bgwRequestHandler_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)

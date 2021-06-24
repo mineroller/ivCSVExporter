@@ -29,6 +29,7 @@ namespace IVCC_Camera_CSV_Export_Utility
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btnGenerate = new System.Windows.Forms.Button();
             this.progressBar = new System.Windows.Forms.ProgressBar();
             this.bgwRequestHandler = new System.ComponentModel.BackgroundWorker();
@@ -42,6 +43,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn7 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn8 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn10 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.btnExport = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.lblGenerateStatus = new System.Windows.Forms.Label();
@@ -91,6 +93,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.olvCamList.AllColumns.Add(this.olvColumn2);
             this.olvCamList.AllColumns.Add(this.olvColumn7);
             this.olvCamList.AllColumns.Add(this.olvColumn8);
+            this.olvCamList.AllColumns.Add(this.olvColumn10);
             this.olvCamList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -104,7 +107,8 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.olvColumn6,
             this.olvColumn2,
             this.olvColumn7,
-            this.olvColumn8});
+            this.olvColumn8,
+            this.olvColumn10});
             this.olvCamList.Cursor = System.Windows.Forms.Cursors.Default;
             this.olvCamList.FullRowSelect = true;
             this.olvCamList.HideSelection = false;
@@ -128,7 +132,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.olvColumn9.AspectName = "Name";
             this.olvColumn9.Groupable = false;
             this.olvColumn9.Text = "Name";
-            this.olvColumn9.Width = 181;
+            this.olvColumn9.Width = 114;
             // 
             // olvColumn3
             // 
@@ -174,7 +178,13 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.olvColumn8.AspectName = "Primary_NVR_IP";
             this.olvColumn8.Groupable = false;
             this.olvColumn8.Text = "Primary NVR IP";
-            this.olvColumn8.Width = 149;
+            this.olvColumn8.Width = 105;
+            // 
+            // olvColumn10
+            // 
+            this.olvColumn10.AspectName = "Recording_NVR";
+            this.olvColumn10.Text = "Recording NVR";
+            this.olvColumn10.Width = 102;
             // 
             // btnExport
             // 
@@ -246,6 +256,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.Controls.Add(this.progressBar);
             this.Controls.Add(this.btnGenerate);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -275,6 +286,7 @@ namespace IVCC_Camera_CSV_Export_Utility
         private System.Windows.Forms.Label lblGenerateStatus;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
+        private BrightIdeasSoftware.OLVColumn olvColumn10;
     }
 }
 

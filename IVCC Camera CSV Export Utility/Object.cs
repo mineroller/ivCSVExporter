@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FileHelpers;
+﻿using FileHelpers;
 
 namespace IVCC_Camera_CSV_Export_Utility
 {
@@ -28,5 +23,14 @@ namespace IVCC_Camera_CSV_Export_Utility
         public string Primary_NVR { get; set; }
         [FieldQuoted('"', QuoteMode.OptionalForBoth)]
         public string Primary_NVR_IP { get; set; }
+        [FieldQuoted('"', QuoteMode.OptionalForBoth)]
+        public string Recording_NVR { get; set; }        
+    }
+
+    public class ivRecSchedule
+    {
+        public string NvrName { get; set; }
+        public string Status { get; set; }
+        public string Mode { get; set; }
     }
 }
