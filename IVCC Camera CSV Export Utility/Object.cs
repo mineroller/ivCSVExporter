@@ -12,6 +12,8 @@ namespace IVCC_Camera_CSV_Export_Utility
         [FieldQuoted('"', QuoteMode.OptionalForBoth)]
         public string Home_Site { get; set; }
         [FieldQuoted('"', QuoteMode.OptionalForBoth)]
+        public string Location { get; set; }
+        [FieldQuoted('"', QuoteMode.OptionalForBoth)]
         public string IP_Address { get; set; }
         [FieldQuoted('"', QuoteMode.OptionalForBoth)]
         public string Service_ID { get; set; }

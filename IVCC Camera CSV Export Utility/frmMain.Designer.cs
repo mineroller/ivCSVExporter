@@ -49,6 +49,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.lblGenerateStatus = new System.Windows.Forms.Label();
             this.btnExit = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.olvCamList)).BeginInit();
             this.SuspendLayout();
             // 
@@ -243,11 +244,21 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.btnExit.UseVisualStyleBackColor = false;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(14, 742);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(206, 15);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "Version 2022-06-01 | Location Enabled";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1300, 766);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.btnExit);
             this.Controls.Add(this.lblGenerateStatus);
             this.Controls.Add(this.btnCancel);
@@ -263,6 +274,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.Text = "IVCC Camera CSV Export Utility";
             ((System.ComponentModel.ISupportInitialize)(this.olvCamList)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -287,6 +299,7 @@ namespace IVCC_Camera_CSV_Export_Utility
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.SaveFileDialog saveFileDialog;
         private BrightIdeasSoftware.OLVColumn olvColumn10;
+        private System.Windows.Forms.Label label1;
     }
 }
 
