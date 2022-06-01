@@ -74,7 +74,7 @@ namespace IVCC_Camera_CSV_Export_Utility
                     Access_URL = c.AccessUrl,
                     Online = d.Connected,
                     IP_Address = d.IpAddress,
-                    Name = d.Name,
+                    Name = d.Name,                   
                     Service_ID = d.Uri,
                     Number = (int)c.LogicalNumber,
                     Primary_NVR_IP = c.PrimaryNvr.Device.IpAddress,

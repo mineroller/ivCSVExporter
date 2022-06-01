@@ -1,14 +1,7 @@
 ﻿using IVCC_Camera_CSV_Export_Utility.OnvifDeviceMgmt10;
-using IVCC_Camera_CSV_Export_Utility.OnvifMedia20;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using System.Net;
-using System.IO;
 
 namespace IVCC_Camera_CSV_Export_Utility
 {
