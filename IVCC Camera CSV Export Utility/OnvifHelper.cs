@@ -2,6 +2,7 @@
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.Collections.Generic;
 
 namespace IVCC_Camera_CSV_Export_Utility
 {
@@ -70,6 +71,52 @@ namespace IVCC_Camera_CSV_Export_Utility
             }
 
         }
+
+        public static List<string> GetONVIFDeviceScopes(string _dsAddress, string _usr, string _pwd)
+        {
+            CustomBinding customBind = CreateCustomBinding();
+            DeviceClient device = GetONVIFDevice(customBind, _dsAddress);
+
+            device.ClientCredentials.HttpDigest.ClientCredential.UserName = _usr;
+            device.ClientCredentials.HttpDigest.ClientCredential.Password = _pwd;
+            device.ClientCredentials.HttpDigest.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation;
+
+            Scope[] scopes = device.GetScopes();
+
+            List<string> scopeitems = new List<string>();
+
+            foreach (Scope s in scopes)
+            {
+                scopeitems.Add(s.ScopeItem);
+            }
+
+            return scopeitems;
+        }
+
+        public static List<string> GetONVIFDeviceNetwork(string _dsAddress, string _usr, string _pwd)
+        {
+            CustomBinding customBind = CreateCustomBinding();
+            DeviceClient device = GetONVIFDevice(customBind, _dsAddress);
+
+            device.ClientCredentials.HttpDigest.ClientCredential.UserName = _usr;
+            device.ClientCredentials.HttpDigest.ClientCredential.Password = _pwd;
+            device.ClientCredentials.HttpDigest.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation;
+
+            NetworkInterface[] interfaces = device.GetNetworkInterfaces();
+
+            List<string> nintitems = new List<string>();
+
+            // NetworkInterface could be more than 1
+            // But assume IP camera always have 1 only.
+
+            foreach (NetworkInterface n in interfaces)
+            {
+                nintitems.Add(n.Info.HwAddress);
+            }
+
+            return nintitems;
+        }
+
 
     }
 }

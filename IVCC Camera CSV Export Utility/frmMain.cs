@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using FileHelpers;
 using System.Text;
+using System.Linq;
+using System.Net;
 
 namespace IVCC_Camera_CSV_Export_Utility
 {
@@ -13,8 +15,11 @@ namespace IVCC_Camera_CSV_Export_Utility
     {
         List<ivCamera> camListObj = new List<ivCamera>();
         int totalCamCount = 0;
-        int progress = 0;        
-        
+        int progress = 0;
+        string _onvifusr = "";
+        string _onvifpwd = "";
+
+
         public frmMain()
         {
             InitializeComponent();
@@ -27,7 +32,10 @@ namespace IVCC_Camera_CSV_Export_Utility
         {
 
             Cameras _cameras = e.Argument as Cameras;
-            totalCamCount = _cameras.Count;            
+            totalCamCount = _cameras.Count;
+            
+            string _locationString = "[None]";
+            string _macString = "[None]";           
 
             foreach (Camera c in _cameras)
             {
@@ -67,22 +75,77 @@ namespace IVCC_Camera_CSV_Export_Utility
                         }
                     }
                 }
-                
+
+                if (chkGetLocMac.Checked)
+                {
+                    if (d.Connected)
+                    {
+                        bool _retry = true;
+                        while (_retry)
+                        {
+                            try
+                            {
+                                List<string> scopeStrings = OnvifHelper.GetONVIFDeviceScopes(c.AccessUrl, _onvifusr, _onvifpwd);
+                                string locationString = scopeStrings.First(s => s.Contains("location"));
+                                _locationString = WebUtility.UrlDecode(locationString.Substring(31));
+
+                                List<string> netintStrings = OnvifHelper.GetONVIFDeviceNetwork(c.AccessUrl, _onvifusr, _onvifpwd);
+
+                                // Assume NetworkInterface will only contain 1 item for IP camera
+                                _macString = netintStrings[0];
+                                _retry = false;
+
+                                break;
+
+                            }
+                            catch (Exception ex)
+                            {
+                                DialogResult _onvifError = MessageBox.Show(ex.Message + "\n\nContinue??", "ONVIF Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                                
+                                if (_onvifError == DialogResult.OK)
+                                {
+                                    this.Invoke((MethodInvoker)delegate ()
+                                    {
+                                        AskOnvifPassword getOnvifCreds = new AskOnvifPassword(d.IpAddress);
+                                        getOnvifCreds.ShowDialog(this);
+                                        _onvifusr = getOnvifCreds.UserName;
+                                        _onvifpwd = getOnvifCreds.Password;
+                                    });
+                                    _retry = true;
+                                    continue;
+                                }
+                                else
+                                {
+                                    _locationString = "[Cam Error]";
+                                    _macString = "[Cam Error]";
+                                    _retry= false;
+                                }
+                            }                            
+                        }
+                    }
+                    else
+                    {
+                        _locationString = "[Offline]";
+                        _macString = "[Offline]";                            
+                    }                        
+                }                
 
                 ivCamera _ivc = new ivCamera
                 {
                     Access_URL = c.AccessUrl,
                     Online = d.Connected,
                     IP_Address = d.IpAddress,
-                    Name = d.Name,                   
+                    Name = d.Name,
+                    Location = _locationString,
+                    MAC_Address = _macString,
                     Service_ID = d.Uri,
                     Number = (int)c.LogicalNumber,
                     Primary_NVR_IP = c.PrimaryNvr.Device.IpAddress,
                     Primary_NVR = c.PrimaryNvr.Device.Name,
                     Home_Site = d.Site.Name,
-                    Recording_NVR = _ivrList[0].NvrName,                    
+                    Recording_NVR = _ivrList[0].NvrName,
                 };
-              
+
                 camListObj.Add(_ivc);
                 progress++;
 
@@ -90,6 +153,7 @@ namespace IVCC_Camera_CSV_Export_Utility
 
                 int percent = progress * 100 / totalCamCount;
                 bgwRequestHandler.ReportProgress(percent);
+
             }
             
         }
@@ -103,16 +167,25 @@ namespace IVCC_Camera_CSV_Export_Utility
                 progress = 0;
                 progressBar.Value = 0;
 
+                if (chkGetLocMac.Checked)
+                {
+                    AskOnvifPassword getOnvifCreds = new AskOnvifPassword("[Default]");
+                    getOnvifCreds.ShowDialog(this);
+                    _onvifusr = getOnvifCreds.UserName;
+                    _onvifpwd = getOnvifCreds.Password;
+                }
+
                 Automation ccAutomation = new Automation();
                 Cameras ivCams = ccAutomation.Cameras;
                 DialogResult proceed = MessageBox.Show("Total " + ivCams.Count.ToString() + " cameras found. Proceed to create list?", "Generate Camera List", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
-
+                
                 if (proceed == DialogResult.OK)
                 {
                     btnGenerate.Enabled = false;
                     olvCamList.Enabled = true;
                     btnCancel.Enabled = true;
                     btnExit.Enabled = false;
+                    chkGetLocMac.Enabled = false;
                     bgwRequestHandler.RunWorkerAsync(ivCams);
                 }
                 else

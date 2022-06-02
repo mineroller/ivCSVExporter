@@ -72,6 +72,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AskOnvifPassword.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="AskOnvifPassword.Designer.cs">
+      <DependentUpon>AskOnvifPassword.cs</DependentUpon>
+    </Compile>
     <Compile Include="Connected Services\OnvifDeviceMgmt10\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -92,6 +98,9 @@
     <Compile Include="OnvifHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="AskOnvifPassword.resx">
+      <DependentUpon>AskOnvifPassword.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
