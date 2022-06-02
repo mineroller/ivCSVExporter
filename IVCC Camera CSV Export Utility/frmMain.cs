@@ -35,7 +35,10 @@ namespace IVCC_Camera_CSV_Export_Utility
             totalCamCount = _cameras.Count;
             
             string _locationString = "[None]";
-            string _macString = "[None]";           
+            string _macString = "[None]";
+            string _serString = "[None]";
+            string _fwString = "[None]";
+            string _modelString = "[None]";
 
             foreach (Camera c in _cameras)
             {
@@ -85,14 +88,14 @@ namespace IVCC_Camera_CSV_Export_Utility
                         {
                             try
                             {
-                                List<string> scopeStrings = OnvifHelper.GetONVIFDeviceScopes(c.AccessUrl, _onvifusr, _onvifpwd);
-                                string locationString = scopeStrings.First(s => s.Contains("location"));
-                                _locationString = WebUtility.UrlDecode(locationString.Substring(31));
+                                ivOnvifObject _onvifObj = OnvifHelper.CreateONVIFObject(c.AccessUrl, _onvifusr, _onvifpwd);
 
-                                List<string> netintStrings = OnvifHelper.GetONVIFDeviceNetwork(c.AccessUrl, _onvifusr, _onvifpwd);
+                                _locationString = _onvifObj.Location;
+                                _macString = _onvifObj.MAC_Address;
+                                _serString = _onvifObj.Serial_Number;
+                                _modelString = _onvifObj.Hardware_Model;
+                                _fwString = _onvifObj.FW_Version;
 
-                                // Assume NetworkInterface will only contain 1 item for IP camera
-                                _macString = netintStrings[0];
                                 _retry = false;
 
                                 break;
@@ -116,8 +119,11 @@ namespace IVCC_Camera_CSV_Export_Utility
                                 }
                                 else
                                 {
-                                    _locationString = "[Cam Error]";
-                                    _macString = "[Cam Error]";
+                                    _locationString = "[AuthError]";
+                                    _macString = "[AuthError]";
+                                    _serString = "[AuthError]";
+                                    _modelString = "[AuthError]";
+                                    _fwString = "[AuthError]";
                                     _retry= false;
                                 }
                             }                            
@@ -126,9 +132,12 @@ namespace IVCC_Camera_CSV_Export_Utility
                     else
                     {
                         _locationString = "[Offline]";
-                        _macString = "[Offline]";                            
+                        _macString = "[Offline]";
+                        _serString = "[Offline]";
+                        _modelString = "[Offline]";
+                        _fwString = "[Offline]";
                     }                        
-                }                
+                }
 
                 ivCamera _ivc = new ivCamera
                 {
@@ -138,6 +147,9 @@ namespace IVCC_Camera_CSV_Export_Utility
                     Name = d.Name,
                     Location = _locationString,
                     MAC_Address = _macString,
+                    Serial_Number = _serString,
+                    Hardware_Model = _modelString,
+                    FW_Version = _fwString,
                     Service_ID = d.Uri,
                     Number = (int)c.LogicalNumber,
                     Primary_NVR_IP = c.PrimaryNvr.Device.IpAddress,
@@ -206,7 +218,8 @@ namespace IVCC_Camera_CSV_Export_Utility
             if (bgwRequestHandler.IsBusy == true)
             {
                 bgwRequestHandler.CancelAsync();
-            }            
+            }
+            btnGenerate.Enabled = false;
         }
 
         private void bgwRequestHandler_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -220,7 +233,7 @@ namespace IVCC_Camera_CSV_Export_Utility
         {
             btnCancel.Enabled = false;
             btnExport.Enabled = true;
-            btnGenerate.Enabled = true;
+            btnGenerate.Enabled = false;
             btnExit.Enabled = true;
         }
 

@@ -38,6 +38,11 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.olvColumn9 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn13 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn15 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn14 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn5 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn6 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -50,8 +55,6 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.btnExit = new System.Windows.Forms.Button();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.label1 = new System.Windows.Forms.Label();
-            this.olvColumn11 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
-            this.olvColumn12 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chkGetLocMac = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.olvCamList)).BeginInit();
@@ -76,7 +79,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar.Location = new System.Drawing.Point(547, 23);
             this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(741, 41);
+            this.progressBar.Size = new System.Drawing.Size(1175, 41);
             this.progressBar.Step = 1;
             this.progressBar.TabIndex = 1;
             // 
@@ -90,12 +93,16 @@ namespace IVCC_Camera_CSV_Export_Utility
             // 
             // olvCamList
             // 
+            this.olvCamList.Alignment = System.Windows.Forms.ListViewAlignment.Default;
             this.olvCamList.AllColumns.Add(this.olvColumn1);
             this.olvCamList.AllColumns.Add(this.olvColumn9);
             this.olvCamList.AllColumns.Add(this.olvColumn3);
             this.olvCamList.AllColumns.Add(this.olvColumn4);
             this.olvCamList.AllColumns.Add(this.olvColumn11);
             this.olvCamList.AllColumns.Add(this.olvColumn12);
+            this.olvCamList.AllColumns.Add(this.olvColumn13);
+            this.olvCamList.AllColumns.Add(this.olvColumn15);
+            this.olvCamList.AllColumns.Add(this.olvColumn14);
             this.olvCamList.AllColumns.Add(this.olvColumn5);
             this.olvCamList.AllColumns.Add(this.olvColumn6);
             this.olvCamList.AllColumns.Add(this.olvColumn2);
@@ -113,6 +120,9 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.olvColumn4,
             this.olvColumn11,
             this.olvColumn12,
+            this.olvColumn13,
+            this.olvColumn15,
+            this.olvColumn14,
             this.olvColumn5,
             this.olvColumn6,
             this.olvColumn2,
@@ -124,7 +134,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.olvCamList.HideSelection = false;
             this.olvCamList.Location = new System.Drawing.Point(12, 71);
             this.olvCamList.Name = "olvCamList";
-            this.olvCamList.Size = new System.Drawing.Size(1276, 616);
+            this.olvCamList.Size = new System.Drawing.Size(1710, 699);
             this.olvCamList.TabIndex = 2;
             this.olvCamList.UseAlternatingBackColors = true;
             this.olvCamList.UseCompatibleStateImageBehavior = false;
@@ -155,37 +165,74 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.olvColumn4.AspectName = "IP_Address";
             this.olvColumn4.Groupable = false;
             this.olvColumn4.Text = "IP Address";
-            this.olvColumn4.Width = 150;
+            this.olvColumn4.Width = 119;
+            // 
+            // olvColumn11
+            // 
+            this.olvColumn11.AspectName = "Location";
+            this.olvColumn11.Text = "Location (ONVIF)";
+            this.olvColumn11.Width = 118;
+            // 
+            // olvColumn12
+            // 
+            this.olvColumn12.AspectName = "MAC_Address";
+            this.olvColumn12.Text = "MAC Address (ONVIF)";
+            this.olvColumn12.Width = 136;
+            // 
+            // olvColumn13
+            // 
+            this.olvColumn13.AspectName = "Serial_Number";
+            this.olvColumn13.DisplayIndex = 7;
+            this.olvColumn13.Text = "Serial (ONVIF)";
+            this.olvColumn13.Width = 104;
+            // 
+            // olvColumn15
+            // 
+            this.olvColumn15.AspectName = "FW_Version";
+            this.olvColumn15.DisplayIndex = 14;
+            this.olvColumn15.Text = "Firmware (ONVIF)";
+            this.olvColumn15.Width = 117;
+            // 
+            // olvColumn14
+            // 
+            this.olvColumn14.AspectName = "Hardware_Model";
+            this.olvColumn14.Text = "Model (ONVIF)";
+            this.olvColumn14.Width = 111;
             // 
             // olvColumn5
             // 
             this.olvColumn5.AspectName = "Service_ID";
+            this.olvColumn5.DisplayIndex = 6;
             this.olvColumn5.Groupable = false;
-            this.olvColumn5.Text = "Service ID (URN)";
-            this.olvColumn5.Width = 163;
+            this.olvColumn5.Text = "Service ID";
+            this.olvColumn5.Width = 123;
             // 
             // olvColumn6
             // 
             this.olvColumn6.AspectName = "Access_URL";
+            this.olvColumn6.DisplayIndex = 9;
             this.olvColumn6.Groupable = false;
             this.olvColumn6.Text = "Camera URL";
-            this.olvColumn6.Width = 188;
+            this.olvColumn6.Width = 116;
             // 
             // olvColumn2
             // 
             this.olvColumn2.AspectName = "Online";
+            this.olvColumn2.DisplayIndex = 10;
             this.olvColumn2.Text = "Connected";
             this.olvColumn2.Width = 100;
             // 
             // olvColumn7
             // 
             this.olvColumn7.AspectName = "Primary_NVR";
+            this.olvColumn7.DisplayIndex = 11;
             this.olvColumn7.Text = "Primary NVR";
             this.olvColumn7.Width = 122;
             // 
             // olvColumn8
             // 
             this.olvColumn8.AspectName = "Primary_NVR_IP";
+            this.olvColumn8.DisplayIndex = 12;
             this.olvColumn8.Groupable = false;
             this.olvColumn8.Text = "Primary NVR IP";
             this.olvColumn8.Width = 105;
@@ -193,6 +240,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             // olvColumn10
             // 
             this.olvColumn10.AspectName = "Recording_NVR";
+            this.olvColumn10.DisplayIndex = 13;
             this.olvColumn10.Text = "Recording NVR";
             this.olvColumn10.Width = 102;
             // 
@@ -202,7 +250,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.btnExport.BackColor = System.Drawing.Color.DarkGreen;
             this.btnExport.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExport.ForeColor = System.Drawing.Color.White;
-            this.btnExport.Location = new System.Drawing.Point(946, 693);
+            this.btnExport.Location = new System.Drawing.Point(1380, 776);
             this.btnExport.Name = "btnExport";
             this.btnExport.Size = new System.Drawing.Size(214, 53);
             this.btnExport.TabIndex = 3;
@@ -212,12 +260,12 @@ namespace IVCC_Camera_CSV_Export_Utility
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnCancel.BackColor = System.Drawing.Color.OrangeRed;
             this.btnCancel.Enabled = false;
             this.btnCancel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnCancel.ForeColor = System.Drawing.Color.White;
-            this.btnCancel.Location = new System.Drawing.Point(12, 694);
+            this.btnCancel.Location = new System.Drawing.Point(12, 776);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(180, 38);
@@ -245,7 +293,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.btnExit.BackColor = System.Drawing.SystemColors.Control;
             this.btnExit.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnExit.ForeColor = System.Drawing.Color.Black;
-            this.btnExit.Location = new System.Drawing.Point(1166, 693);
+            this.btnExit.Location = new System.Drawing.Point(1600, 776);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(122, 53);
             this.btnExit.TabIndex = 6;
@@ -255,31 +303,21 @@ namespace IVCC_Camera_CSV_Export_Utility
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(14, 742);
+            this.label1.Location = new System.Drawing.Point(12, 831);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(206, 15);
             this.label1.TabIndex = 7;
             this.label1.Text = "Version 2022-06-01 | Location Enabled";
             // 
-            // olvColumn11
-            // 
-            this.olvColumn11.AspectName = "Location";
-            this.olvColumn11.Text = "Location (ONVIF)";
-            this.olvColumn11.Width = 118;
-            // 
-            // olvColumn12
-            // 
-            this.olvColumn12.AspectName = "MAC_Address";
-            this.olvColumn12.Text = "MAC Address (ONVIF)";
-            this.olvColumn12.Width = 136;
-            // 
             // groupBox1
             // 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.chkGetLocMac);
-            this.groupBox1.Location = new System.Drawing.Point(434, 694);
+            this.groupBox1.Location = new System.Drawing.Point(855, 779);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(506, 67);
+            this.groupBox1.Size = new System.Drawing.Size(519, 67);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Additional ONVIF Information";
@@ -290,16 +328,16 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.chkGetLocMac.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.chkGetLocMac.Location = new System.Drawing.Point(90, 28);
             this.chkGetLocMac.Name = "chkGetLocMac";
-            this.chkGetLocMac.Size = new System.Drawing.Size(327, 24);
+            this.chkGetLocMac.Size = new System.Drawing.Size(350, 24);
             this.chkGetLocMac.TabIndex = 0;
-            this.chkGetLocMac.Text = "Add Location and MAC using ONVIF Protocol";
+            this.chkGetLocMac.Text = "Get additional information using ONVIF Protocol";
             this.chkGetLocMac.UseVisualStyleBackColor = true;
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1300, 772);
+            this.ClientSize = new System.Drawing.Size(1734, 855);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnExit);
@@ -349,6 +387,9 @@ namespace IVCC_Camera_CSV_Export_Utility
         private BrightIdeasSoftware.OLVColumn olvColumn12;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.CheckBox chkGetLocMac;
+        private BrightIdeasSoftware.OLVColumn olvColumn13;
+        private BrightIdeasSoftware.OLVColumn olvColumn14;
+        private BrightIdeasSoftware.OLVColumn olvColumn15;
     }
 }
 

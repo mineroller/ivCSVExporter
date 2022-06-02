@@ -3,6 +3,7 @@ using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace IVCC_Camera_CSV_Export_Utility
 {
@@ -45,7 +46,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             }
         }
 
-        public static string GetONVIFDeviceInfo(string _dsAddress, string _usr, string _pwd)
+        public static ivOnvifObject CreateONVIFObject(string _dsAddress, string _usr, string _pwd)
         {
             CustomBinding customBind = CreateCustomBinding();
             DeviceClient device = GetONVIFDevice(customBind, _dsAddress);
@@ -53,70 +54,57 @@ namespace IVCC_Camera_CSV_Export_Utility
             device.ClientCredentials.HttpDigest.ClientCredential.UserName = _usr;
             device.ClientCredentials.HttpDigest.ClientCredential.Password = _pwd;
             device.ClientCredentials.HttpDigest.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation;
+            
+            // Get Model, Firmware and Serial
 
             string _model;
             string _firmware;
             string _serialNumber;
             string _HardwareId;
-
-            try
-            {
-                device.GetDeviceInformation(out _model, out _firmware, out _serialNumber, out _HardwareId);                
-                string _info = _model + " | " + _firmware + " | " + _serialNumber;
-                return _info;
-            }
-            catch
-            {
-                throw;
-            }
-
-        }
-
-        public static List<string> GetONVIFDeviceScopes(string _dsAddress, string _usr, string _pwd)
-        {
-            CustomBinding customBind = CreateCustomBinding();
-            DeviceClient device = GetONVIFDevice(customBind, _dsAddress);
-
-            device.ClientCredentials.HttpDigest.ClientCredential.UserName = _usr;
-            device.ClientCredentials.HttpDigest.ClientCredential.Password = _pwd;
-            device.ClientCredentials.HttpDigest.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation;
+            
+            device.GetDeviceInformation(out _model, out _firmware, out _serialNumber, out _HardwareId);                        
+            
+            // Get Location  (_locDecoded)
 
             Scope[] scopes = device.GetScopes();
-
-            List<string> scopeitems = new List<string>();
+            List<string> scopeItems = new List<string>();
 
             foreach (Scope s in scopes)
             {
-                scopeitems.Add(s.ScopeItem);
+                scopeItems.Add(s.ScopeItem);
             }
+            
+            string _locString = scopeItems.First(s => s.Contains("location"));
+            string _locDecoded = WebUtility.UrlDecode(_locString.Substring(31));
 
-            return scopeitems;
-        }
-
-        public static List<string> GetONVIFDeviceNetwork(string _dsAddress, string _usr, string _pwd)
-        {
-            CustomBinding customBind = CreateCustomBinding();
-            DeviceClient device = GetONVIFDevice(customBind, _dsAddress);
-
-            device.ClientCredentials.HttpDigest.ClientCredential.UserName = _usr;
-            device.ClientCredentials.HttpDigest.ClientCredential.Password = _pwd;
-            device.ClientCredentials.HttpDigest.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation;
+            // Get MAC Address
 
             NetworkInterface[] interfaces = device.GetNetworkInterfaces();
-
-            List<string> nintitems = new List<string>();
-
-            // NetworkInterface could be more than 1
-            // But assume IP camera always have 1 only.
-
+            List<string> nIntItems = new List<string>();
+            
             foreach (NetworkInterface n in interfaces)
             {
-                nintitems.Add(n.Info.HwAddress);
+                nIntItems.Add(n.Info.HwAddress);
             }
 
-            return nintitems;
+            // Assume NetworkInterface will only contain 1 item for IP camera
+            string _macString = nIntItems[0];
+
+            // Create OnvifObject
+
+            ivOnvifObject obj = new ivOnvifObject
+            {
+                FW_Version = _firmware,
+                Hardware_Model = _model,
+                Location = _locDecoded,
+                MAC_Address = _macString,
+                Serial_Number = _serialNumber,
+            };
+
+            return obj;
+
         }
 
 
-    }
+    }    
 }
