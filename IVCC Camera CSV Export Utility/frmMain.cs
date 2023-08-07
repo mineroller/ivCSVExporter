@@ -88,7 +88,17 @@ namespace IVCC_Camera_CSV_Export_Utility
                         {
                             try
                             {
-                                ivOnvifObject _onvifObj = OnvifHelper.CreateONVIFObject(c.AccessUrl, _onvifusr, _onvifpwd);
+                                string _HttpUrl = c.AccessUrl;
+
+                                // Since https is not supported, take the AccessURL and change the address to http instead of https.
+
+                                if (c.AccessUrl.Substring(0,5) == "https")
+                                {
+                                    _HttpUrl = c.AccessUrl.Replace("https://", "http://");
+                                    // MessageBox.Show("Old URL: " + c.AccessUrl + "\n" + "New URL: " + _HttpUrl, "URL Changed", MessageBoxButtons.OK);
+                                }                               
+
+                                ivOnvifObject _onvifObj = OnvifHelper.CreateONVIFObject(_HttpUrl, _onvifusr, _onvifpwd);
 
                                 _locationString = _onvifObj.Location;
                                 _macString = _onvifObj.MAC_Address;
@@ -103,9 +113,9 @@ namespace IVCC_Camera_CSV_Export_Utility
                             }
                             catch (Exception ex)
                             {
-                                DialogResult _onvifError = MessageBox.Show(ex.Message + "\n\nContinue??", "ONVIF Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
+                                DialogResult _onvifError = MessageBox.Show(ex.Message + "\n\nChoose an action: Abort, Retry or Ignore?", "ONVIF Error: Device [" + d.IpAddress + "]", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
                                 
-                                if (_onvifError == DialogResult.OK)
+                                if (_onvifError == DialogResult.Retry)
                                 {
                                     this.Invoke((MethodInvoker)delegate ()
                                     {
@@ -116,6 +126,11 @@ namespace IVCC_Camera_CSV_Export_Utility
                                     });
                                     _retry = true;
                                     continue;
+                                }
+                                else if (_onvifError == DialogResult.Abort)
+                                {
+                                    btnCancel_Click(sender, new EventArgs());
+                                    break;
                                 }
                                 else
                                 {
@@ -220,6 +235,7 @@ namespace IVCC_Camera_CSV_Export_Utility
                 bgwRequestHandler.CancelAsync();
             }
             btnGenerate.Enabled = false;
+            MessageBox.Show("Operation Aborted. Please close and restart the application.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Stop);
         }
 
         private void bgwRequestHandler_ProgressChanged(object sender, ProgressChangedEventArgs e)

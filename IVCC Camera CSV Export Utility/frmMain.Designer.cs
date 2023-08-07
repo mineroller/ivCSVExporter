@@ -309,7 +309,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(206, 15);
             this.label1.TabIndex = 7;
-            this.label1.Text = "Version 2022-06-01 | Location Enabled";
+            this.label1.Text = "Version 2023-08-07 | Location Enabled";
             // 
             // groupBox1
             // 
