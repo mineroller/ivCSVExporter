@@ -8,6 +8,8 @@ using FileHelpers;
 using System.Text;
 using System.Linq;
 using System.Net;
+using Newtonsoft.Json;
+using System.IO;
 
 namespace IVCC_Camera_CSV_Export_Utility
 {
@@ -173,6 +175,11 @@ namespace IVCC_Camera_CSV_Export_Utility
                     Recording_NVR = _ivrList[0].NvrName,
                 };
 
+                if (chkExportJson.Checked)
+                {
+                    WriteOnvifDataFile(_ivc);
+                }
+
                 camListObj.Add(_ivc);
                 progress++;
 
@@ -213,6 +220,7 @@ namespace IVCC_Camera_CSV_Export_Utility
                     btnCancel.Enabled = true;
                     btnExit.Enabled = false;
                     chkGetLocMac.Enabled = false;
+                    chkExportJson.Enabled = false;
                     bgwRequestHandler.RunWorkerAsync(ivCams);
                 }
                 else
@@ -282,5 +290,29 @@ namespace IVCC_Camera_CSV_Export_Utility
 
             }
         }
+        
+        private void WriteOnvifDataFile(ivCamera _ivcam)        
+        {
+            string _dataDir = AppDomain.CurrentDomain.BaseDirectory + @"data\";
+
+            if (!Directory.Exists(_dataDir))
+            {
+                Directory.CreateDirectory(_dataDir);
+            }
+
+            FileInfo _dataFile = new FileInfo(_dataDir + _ivcam.Number.ToString("00000") + ".json");
+
+            using (FileStream _dataFS = new FileStream(_dataFile.FullName, FileMode.Create))
+            {
+                using (StreamWriter _sw = new StreamWriter(_dataFS))
+                {
+                    string _onvifcache = JsonConvert.SerializeObject(_ivcam, Formatting.Indented);
+                    _sw.Write(_onvifcache);                    
+                }
+            }
+
+
+        }
+
     }
 }
