@@ -34,7 +34,9 @@ namespace IVCC_Camera_CSV_Export_Utility
         [FieldQuoted('"', QuoteMode.OptionalForBoth)]
         public string Primary_NVR_IP { get; set; }
         [FieldQuoted('"', QuoteMode.OptionalForBoth)]
-        public string Recording_NVR { get; set; }        
+        public string Recording_NVR { get; set; }
+        [FieldQuoted('"', QuoteMode.OptionalForBoth)]
+        public string Resolution { get; set; }
     }
 
     public class ivRecSchedule

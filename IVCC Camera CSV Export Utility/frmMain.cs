@@ -42,6 +42,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             string _serString = "[None]";
             string _fwString = "[None]";
             string _modelString = "[None]";
+            string _resolutionString = "[None]";
             string _snapshotURI = "NA";
 
             foreach (Camera c in _cameras)
@@ -83,7 +84,7 @@ namespace IVCC_Camera_CSV_Export_Utility
                     }
                 }
 
-                if (chkGetLocMac.Checked)
+                if (chkGetOnvif.Checked)
                 {
                     if (d.Connected)
                     {
@@ -110,6 +111,12 @@ namespace IVCC_Camera_CSV_Export_Utility
                                 _modelString = _onvifObj.Hardware_Model;
                                 _fwString = _onvifObj.FW_Version;
                                 _snapshotURI = _onvifObj.Snapshot_URI;
+
+                                if (chkExportSnapshots.Checked)
+                                {
+                                    _resolutionString = SaveSnapshotImage(_HttpUrl, d.Name, (int)c.LogicalNumber);                                  
+                                }
+
 
                                 _retry = false;
 
@@ -139,12 +146,13 @@ namespace IVCC_Camera_CSV_Export_Utility
                                 }
                                 else
                                 {
-                                    _locationString = "[AuthError]";
-                                    _macString = "[AuthError]";
-                                    _serString = "[AuthError]";
-                                    _modelString = "[AuthError]";
-                                    _fwString = "[AuthError]";
-                                    _retry= false;
+                                    _locationString = "[Error]";
+                                    _macString = "[Error]";
+                                    _serString = "[Error]";
+                                    _modelString = "[Error]";
+                                    _fwString = "[Error]";
+                                    _resolutionString = "[Error]";
+                                    _retry = false;
                                 }
                             }                            
                         }
@@ -156,6 +164,7 @@ namespace IVCC_Camera_CSV_Export_Utility
                         _serString = "[Offline]";
                         _modelString = "[Offline]";
                         _fwString = "[Offline]";
+                        _resolutionString = "[Offline]";
                     }                        
                 }
 
@@ -176,17 +185,13 @@ namespace IVCC_Camera_CSV_Export_Utility
                     Primary_NVR = c.PrimaryNvr.Device.Name,
                     Home_Site = d.Site.Name,
                     Recording_NVR = _ivrList[0].NvrName,
+                    Resolution = _resolutionString,
                 };
 
                 if (chkExportJson.Checked)
                 {
                     WriteOnvifDataFile(_ivc);
-                }
-
-                if (chkExportSnapshots.Checked)
-                {                    
-                    SaveSnapshotImage(_ivc);
-                }
+                }               
 
                 camListObj.Add(_ivc);
                 progress++;
@@ -209,7 +214,7 @@ namespace IVCC_Camera_CSV_Export_Utility
                 progress = 0;
                 progressBar.Value = 0;
 
-                if (chkGetLocMac.Checked)
+                if (chkGetOnvif.Checked)
                 {
                     AskOnvifPassword getOnvifCreds = new AskOnvifPassword("[Default]");
                     getOnvifCreds.ShowDialog(this);
@@ -227,8 +232,8 @@ namespace IVCC_Camera_CSV_Export_Utility
                     olvCamList.Enabled = true;
                     btnCancel.Enabled = true;
                     btnExit.Enabled = false;
-                    chkGetLocMac.Enabled = false;
-                    chkExportJson.Enabled = false;
+                    groupBox1.Enabled = false;
+                    groupBox2.Enabled = false;
                     bgwRequestHandler.RunWorkerAsync(ivCams);
                 }
                 else
@@ -320,55 +325,52 @@ namespace IVCC_Camera_CSV_Export_Utility
             }
         }
 
-        private void SaveSnapshotImage(ivCamera _ivcam)
+        private string SaveSnapshotImage(string _url, string _name, int _num)
         {
             string _imgDir = AppDomain.CurrentDomain.BaseDirectory + @"snaphots\";
-            string _imgPath = null;
+            string _imgPath = "";
+            string _resolution = "[None]";
 
             if (!Directory.Exists(_imgDir))
             {
                 Directory.CreateDirectory(_imgDir);
-            }            
+            }
             
-            string _HttpUrl = _ivcam.Access_URL;
-
-            // Since https is not supported, take the AccessURL and change the address to http instead of https.
-
-            if (_ivcam.Access_URL.Substring(0, 5) == "https")
-            {
-                _HttpUrl = _ivcam.Access_URL.Replace("https://", "http://");
-            }            
-
             try
             {
-                string _snapshotURI = OnvifHelper.GetSnapshotURI(_HttpUrl, _onvifusr, _onvifpwd, 0);
+                
+                string _snapshotURI = OnvifHelper.GetSnapshotURI(_url, _onvifusr, _onvifpwd, 0);
 
                 if (_snapshotURI != null)
                 {
                     using (MemoryStream snapshotImg = OnvifHelper.DownloadSnapshot(_snapshotURI, _onvifusr, _onvifpwd))
                     {
                         Bitmap _snapshot = new Bitmap(snapshotImg);
+                        _resolution = _snapshot.Width.ToString() + "x" + _snapshot.Height.ToString();
+                        string _cleanName = string.Join("_", _name.Split(Path.GetInvalidFileNameChars()));
 
-                        string _cleanName = string.Join("_", _ivcam.Name.Split(Path.GetInvalidFileNameChars()));
-                        FileInfo _imgFile = new FileInfo(_imgDir + _ivcam.Number.ToString("00000") + "_" + _cleanName + _snapshot.Width.ToString() + _snapshot.Height.ToString() + ".jpg");
+                        FileInfo _imgFile = new FileInfo(_imgDir + _num.ToString("00000") + "_" + _cleanName + "_" + _resolution + ".jpg");
                         _imgPath = _imgFile.FullName;
 
-                        _snapshot.Save(_imgPath, System.Drawing.Imaging.ImageFormat.Jpeg);
-                        
+                        _snapshot.Save(_imgPath, System.Drawing.Imaging.ImageFormat.Jpeg);                        
                     }
+                    
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("ERROR: " + ex.Message + "\n\n" + _imgPath.FullName, "Snapshot Error: " + _ivcam.Name + " [" + _ivcam.IP_Address + "]", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("ERROR: " + ex.Message + "\n\n" + _imgPath, "Snapshot Error: " + _name + " [" + _url + "]", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                _resolution = "[Error]";
             }
+
+            return _resolution;
         }
 
 
 
         private void chkGetLocMac_CheckedChanged(object sender, EventArgs e)
         {
-            if (chkGetLocMac.Checked)
+            if (chkGetOnvif.Checked)
             {
                 chkExportSnapshots.Enabled = true;
             }
