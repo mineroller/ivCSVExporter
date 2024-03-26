@@ -51,5 +51,6 @@ namespace IVCC_Camera_CSV_Export_Utility
         public string Hardware_Model { get; set; }
         public string Serial_Number { get; set; }
         public string FW_Version { get; set; }
+        public string Snapshot_URI { get; set; }
     }
 }

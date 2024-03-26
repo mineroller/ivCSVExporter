@@ -10,6 +10,7 @@ using System.Linq;
 using System.Net;
 using Newtonsoft.Json;
 using System.IO;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace IVCC_Camera_CSV_Export_Utility
 {
@@ -41,6 +42,7 @@ namespace IVCC_Camera_CSV_Export_Utility
             string _serString = "[None]";
             string _fwString = "[None]";
             string _modelString = "[None]";
+            string _snapshotURI = "NA";
 
             foreach (Camera c in _cameras)
             {
@@ -107,6 +109,7 @@ namespace IVCC_Camera_CSV_Export_Utility
                                 _serString = _onvifObj.Serial_Number;
                                 _modelString = _onvifObj.Hardware_Model;
                                 _fwString = _onvifObj.FW_Version;
+                                _snapshotURI = _onvifObj.Snapshot_URI;
 
                                 _retry = false;
 
@@ -115,7 +118,7 @@ namespace IVCC_Camera_CSV_Export_Utility
                             }
                             catch (Exception ex)
                             {
-                                DialogResult _onvifError = MessageBox.Show(ex.Message + "\n\nChoose an action: Abort, Retry or Ignore?", "ONVIF Error: Device [" + d.IpAddress + "]", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
+                                DialogResult _onvifError = MessageBox.Show(ex.Message + "\n\nChoose an action: Abort, Retry or Ignore?", "ONVIF Error:" + d.Name + " [" + d.IpAddress + "]", MessageBoxButtons.AbortRetryIgnore, MessageBoxIcon.Error);
                                 
                                 if (_onvifError == DialogResult.Retry)
                                 {
@@ -178,6 +181,11 @@ namespace IVCC_Camera_CSV_Export_Utility
                 if (chkExportJson.Checked)
                 {
                     WriteOnvifDataFile(_ivc);
+                }
+
+                if (chkExportSnapshots.Checked)
+                {                    
+                    SaveSnapshotImage(_ivc);
                 }
 
                 camListObj.Add(_ivc);
@@ -310,9 +318,64 @@ namespace IVCC_Camera_CSV_Export_Utility
                     _sw.Write(_onvifcache);                    
                 }
             }
-
-
         }
 
+        private void SaveSnapshotImage(ivCamera _ivcam)
+        {
+            string _imgDir = AppDomain.CurrentDomain.BaseDirectory + @"snaphots\";
+            string _imgPath = null;
+
+            if (!Directory.Exists(_imgDir))
+            {
+                Directory.CreateDirectory(_imgDir);
+            }            
+            
+            string _HttpUrl = _ivcam.Access_URL;
+
+            // Since https is not supported, take the AccessURL and change the address to http instead of https.
+
+            if (_ivcam.Access_URL.Substring(0, 5) == "https")
+            {
+                _HttpUrl = _ivcam.Access_URL.Replace("https://", "http://");
+            }            
+
+            try
+            {
+                string _snapshotURI = OnvifHelper.GetSnapshotURI(_HttpUrl, _onvifusr, _onvifpwd, 0);
+
+                if (_snapshotURI != null)
+                {
+                    using (MemoryStream snapshotImg = OnvifHelper.DownloadSnapshot(_snapshotURI, _onvifusr, _onvifpwd))
+                    {
+                        Bitmap _snapshot = new Bitmap(snapshotImg);
+
+                        string _cleanName = string.Join("_", _ivcam.Name.Split(Path.GetInvalidFileNameChars()));
+                        FileInfo _imgFile = new FileInfo(_imgDir + _ivcam.Number.ToString("00000") + "_" + _cleanName + _snapshot.Width.ToString() + _snapshot.Height.ToString() + ".jpg");
+                        _imgPath = _imgFile.FullName;
+
+                        _snapshot.Save(_imgPath, System.Drawing.Imaging.ImageFormat.Jpeg);
+                        
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("ERROR: " + ex.Message + "\n\n" + _imgPath.FullName, "Snapshot Error: " + _ivcam.Name + " [" + _ivcam.IP_Address + "]", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+
+
+        private void chkGetLocMac_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkGetLocMac.Checked)
+            {
+                chkExportSnapshots.Enabled = true;
+            }
+            else
+            {
+                chkExportSnapshots.Enabled = false; 
+            }
+        }
     }
 }

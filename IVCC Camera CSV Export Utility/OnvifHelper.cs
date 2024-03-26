@@ -4,6 +4,8 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Collections.Generic;
 using System.Linq;
+using IVCC_Camera_CSV_Export_Utility.OnvifMedia20;
+using System.IO;
 
 namespace IVCC_Camera_CSV_Export_Utility
 {
@@ -54,16 +56,16 @@ namespace IVCC_Camera_CSV_Export_Utility
             device.ClientCredentials.HttpDigest.ClientCredential.UserName = _usr;
             device.ClientCredentials.HttpDigest.ClientCredential.Password = _pwd;
             device.ClientCredentials.HttpDigest.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation;
-            
+
             // Get Model, Firmware and Serial
 
             string _model;
             string _firmware;
             string _serialNumber;
             string _HardwareId;
-            
-            device.GetDeviceInformation(out _model, out _firmware, out _serialNumber, out _HardwareId);                        
-            
+
+            device.GetDeviceInformation(out _model, out _firmware, out _serialNumber, out _HardwareId);
+
             // Get Location  (_locDecoded)
 
             Scope[] scopes = device.GetScopes();
@@ -73,16 +75,16 @@ namespace IVCC_Camera_CSV_Export_Utility
             {
                 scopeItems.Add(s.ScopeItem);
             }
-            
+
             string _locString = scopeItems.First(s => s.Contains("location"));
             string _locDecoded = WebUtility.UrlDecode(_locString.Substring(31));
 
             // Get MAC Address
 
-            NetworkInterface[] interfaces = device.GetNetworkInterfaces();
+            OnvifDeviceMgmt10.NetworkInterface[] interfaces = device.GetNetworkInterfaces();
             List<string> nIntItems = new List<string>();
-            
-            foreach (NetworkInterface n in interfaces)
+
+            foreach (OnvifDeviceMgmt10.NetworkInterface n in interfaces)
             {
                 nIntItems.Add(n.Info.HwAddress);
             }
@@ -105,6 +107,54 @@ namespace IVCC_Camera_CSV_Export_Utility
 
         }
 
+        public static string GetSnapshotURI(string _dsAddress, string _usr, string _pwd, int _profileNumber)
+        {
 
-    }    
+            CustomBinding customBind = CreateCustomBinding();
+            DeviceClient device = GetONVIFDevice(customBind, _dsAddress);
+            Service[] services = device.GetServices(false);
+
+            // Then, find the Media related service by LINQ call
+
+            Service media = services.FirstOrDefault(s => s.Namespace == "http://www.onvif.org/ver20/media/wsdl");
+
+            Media2Client sabM2Client = new Media2Client(customBind, new EndpointAddress(media.XAddr));
+
+            sabM2Client.ClientCredentials.HttpDigest.ClientCredential.UserName = _usr;
+            sabM2Client.ClientCredentials.HttpDigest.ClientCredential.Password = _pwd;
+            sabM2Client.ClientCredentials.HttpDigest.AllowedImpersonationLevel = System.Security.Principal.TokenImpersonationLevel.Impersonation;
+
+            // Finally get a list of capabilities from this device.
+            // For this, we are interested in if SnapshotUri is true
+
+            Capabilities2 cap2 = sabM2Client.GetServiceCapabilities();
+
+            if (cap2.SnapshotUri)
+            {
+                // Get list of profiles, then select the one provided by default
+                try
+                {
+                    MediaProfile[] profiles = sabM2Client.GetProfiles(null, null);
+                    string _uri = sabM2Client.GetSnapshotUri(profiles[_profileNumber].token);
+                    return _uri;
+                }
+                catch
+                {
+                    throw;
+                }
+            }
+            else
+            {
+                return "NA";
+            }
+        }
+
+        public static MemoryStream DownloadSnapshot(string _uri, string _onvifuser, string _onvifpassword)
+        {
+            WebClient _wc = new WebClient();
+            _wc.Credentials = new NetworkCredential(_onvifuser, _onvifpassword);
+            MemoryStream _ms = new MemoryStream(_wc.DownloadData(_uri));
+            return _ms;
+        }
+    }
 }
